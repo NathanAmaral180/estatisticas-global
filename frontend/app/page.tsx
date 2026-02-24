@@ -17,6 +17,7 @@ type IndicatorsResponse = { items: Indicator[] }
 
 const API =
   process.env.NEXT_PUBLIC_API_BASE || "https://estatisticas-global.onrender.com";
+<p>API: {API}</p>
 
 const PINNED_IDS = [
   "population_world",
