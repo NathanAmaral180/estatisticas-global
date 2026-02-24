@@ -13,7 +13,13 @@ type Indicator = {
   note?: string
 }
 
-type IndicatorsResponse = { items: Indicator[] }
+type IndicatorsResponse = {
+  as_of: string
+  count: number
+  items: Indicator[]
+  errors_count?: number
+  errors?: any[]
+}
 
 const API =
   process.env.NEXT_PUBLIC_API_BASE || "https://estatisticas-global.onrender.com"
