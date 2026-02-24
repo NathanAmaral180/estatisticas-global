@@ -7,6 +7,9 @@ from core.sources_worldbank import fetch_worldbank_latest_value
 from core.sources_bcb import fetch_bcb_sgs_latest_value
 from core.cache import get_cache, set_cache
 
+from fastapi import HTTPException
+import traceback
+
 app = FastAPI()
 
 app.add_middleware(
@@ -122,18 +125,26 @@ def build_indicator_payload(indicator):
         "as_of": now_iso(),
     }
 
-@app.get("/")
-def home():
-    return {"status": "API funcionando"}
-
 @app.get("/indicators")
 def get_indicators():
-    items = [build_indicator_payload(ind) for ind in INDICATOR_REGISTRY]
-    return {"as_of": now_iso(), "count": len(items), "items": items}
+    items = []
+    errors = []
 
-@app.get("/indicators/{indicator_id}")
-def get_indicator(indicator_id: str):
     for ind in INDICATOR_REGISTRY:
-        if ind["id"] == indicator_id:
-            return build_indicator_payload(ind)
-    return {"error": "Indicador não encontrado"}
+        try:
+            items.append(build_indicator_payload(ind))
+        except Exception as e:
+            # não derruba a API inteira
+            errors.append({
+                "id": ind.get("id"),
+                "title": ind.get("title"),
+                "error": str(e),
+            })
+
+    return {
+        "as_of": now_iso(),
+        "count": len(items),
+        "items": items,
+        "errors_count": len(errors),
+        "errors": errors[:10],  # limita pra não explodir a resposta
+    }
