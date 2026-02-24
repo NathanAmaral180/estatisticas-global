@@ -16,8 +16,7 @@ type Indicator = {
 type IndicatorsResponse = { items: Indicator[] }
 
 const API =
-  process.env.NEXT_PUBLIC_API_BASE || "https://estatisticas-global.onrender.com";
-<p>API: {API}</p>
+  process.env.NEXT_PUBLIC_API_BASE || "https://estatisticas-global.onrender.com"
 
 const PINNED_IDS = [
   "population_world",
@@ -77,6 +76,13 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
+      {/* DEBUG: mostra qual API o Render está usando */}
+      <div className="relative mx-auto max-w-6xl px-6 pt-4">
+        <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-200">
+          API: <span className="font-mono">{API}</span>
+        </div>
+      </div>
+
       {/* Background premium */}
       <div className="pointer-events-none fixed inset-0">
         <div className="absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-white/10 blur-3xl" />
