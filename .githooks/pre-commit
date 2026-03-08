@@ -1,0 +1,12 @@
+#!/bin/sh
+
+echo "Running encoding check..."
+
+# detect common mojibake characters introduced by encoding errors
+if git diff --cached -- . ':(exclude).githooks/pre-commit' | grep -E "Ã|Â|ð"; then
+  echo "Possible encoding corruption detected (mojibake)."
+  echo "Commit aborted. Fix encoding before committing."
+  exit 1
+fi
+
+echo "Encoding check passed."

@@ -1,157 +1,184 @@
-from datetime import datetime
-
-def now():
-    return datetime.utcnow().isoformat()
-
 INDICATOR_REGISTRY = [
+
+    # =========================================
+    # POPULACAO MUNDIAL (LIVE - HIBRIDO)
+    # =========================================
     {
         "id": "population_world",
-        "title": "População Mundial",
+        "title": "População mundial atual",
+        "kind": "indicator",
+        "type": "model",
         "category": "Demografia",
         "unit": "pessoas",
-        "base_value": 8090123221,
-        "growth_per_second": 2.5,
-        "source": "Modelo (inicial)",
+        "source": "Modelo híbrido (base oficial + projeção automática)",
+        "description": "Estimativa em tempo real da população mundial.",
+        "history_enabled": False,
+        "ranking_enabled": False,
+        "default_focus": "overview",
+        "home_priority": 0,
+        "world_priority": 0,
+
+        # base: população mundial (estimativa ONU/OWID) — coloque aqui o último valor que você quer usar como base
+        "base_value": 8280000000,  # <-- pode ajustar depois
+
+        # taxa média líquida (nascimentos - mortes) por segundo
+        # exemplo: ~2.6 pessoas/s dá ~82 milhões/ano (ordem realista)
+        "growth_per_second": 2.6,
     },
+    # =========================================
+    # POPULACAO MUNDIAL (SERIE HISTORICA)
+    # =========================================
     {
-        "id": "co2_today",
-        "title": "CO₂ emitido hoje",
-        "category": "Clima",
-        "unit": "toneladas",
-        "base_value": 24586324,
-        "growth_per_second": 8.2,
-        "source": "Modelo (inicial)",
-    },
-    {
-        "id": "population_brazil_worldbank",
-        "title": "População do Brasil (World Bank)",
+        "id": "population_world_longrun",
+        "title": "População mundial (long-run)",
+        "kind": "indicator",
+        "type": "series",
         "category": "Demografia",
         "unit": "pessoas",
-        "source": "World Bank",
-        "type": "worldbank_latest",
-        "country_code": "BR",
-        "indicator_code": "SP.POP.TOTL",
+        "source": "Our World in Data / ONU",
+        "description": "Série histórica de longo prazo da população mundial.",
+        "history_enabled": True,
+        "ranking_enabled": False,
+        "default_focus": "overview",
+        "home_priority": 0,
+        "world_priority": 0,
     },
-        # ----------------
-    # ECONOMIA (World Bank - Mundo)
-    # ----------------
+
+    # =========================================
+    # 🇧🇷 SELIC
+    # =========================================
+    {
+        "id": "selic_bcb_daily",
+        "title": "Taxa Selic",
+        "kind": "indicator",
+        "type": "bcb_sgs_latest",
+        "category": "Economia Brasil",
+        "unit": "%",
+        "source": "internal",
+        "description": "Último valor disponível da taxa Selic.",
+        "history_enabled": True,
+        "ranking_enabled": False,
+        "default_focus": "overview",
+        "home_priority": 0,
+        "world_priority": 0,
+        "series_id": 432,
+    },
+
+    # =========================================
+    # 🇧🇷 IPCA
+    # =========================================
+    {
+        "id": "ipca_bcb_monthly",
+        "title": "IPCA (inflação mensal)",
+        "kind": "indicator",
+        "type": "bcb_sgs_latest",
+        "category": "Economia Brasil",
+        "unit": "%",
+        "source": "internal",
+        "description": "Último valor mensal disponível do IPCA.",
+        "history_enabled": True,
+        "ranking_enabled": False,
+        "default_focus": "overview",
+        "home_priority": 0,
+        "world_priority": 0,
+        "series_id": 433,
+    },
+
+    # =========================================
+    # 💵 USD/BRL
+    # =========================================
+    {
+        "id": "usd_brl_bcb",
+        "title": "Dólar (USD/BRL)",
+        "kind": "indicator",
+        "type": "bcb_sgs_latest",
+        "category": "Economia Brasil",
+        "unit": "R$",
+        "source": "internal",
+        "description": "Último valor disponível da cotação USD/BRL.",
+        "history_enabled": True,
+        "ranking_enabled": False,
+        "default_focus": "overview",
+        "home_priority": 0,
+        "world_priority": 0,
+        "series_id": 1,
+    },
+
+    # =========================================
+    # 🌎 PIB MUNDIAL (World Bank)
+    # =========================================
     {
         "id": "gdp_world_current_usd",
         "title": "PIB mundial (US$ corrente)",
-        "category": "Economia",
-        "unit": "US$",
-        "source": "World Bank",
+        "kind": "indicator",
         "type": "worldbank_latest",
+        "category": "Economia Global",
+        "unit": "US$",
+        "source": "internal",
+        "description": "Último valor anual disponível do PIB mundial em US$ corrente.",
+        "history_enabled": True,
+        "ranking_enabled": False,
+        "default_focus": "overview",
+        "home_priority": 0,
+        "world_priority": 0,
         "country_code": "WLD",
         "indicator_code": "NY.GDP.MKTP.CD",
     },
-    {
-        "id": "inflation_world_cpi_yoy",
-        "title": "Inflação mundial (CPI, % a.a.)",
-        "category": "Economia",
-        "unit": "% a.a.",
-        "source": "World Bank",
-        "type": "worldbank_latest",
-        "country_code": "WLD",
-        "indicator_code": "FP.CPI.TOTL.ZG",
-    },
-    {
-        "id": "unemployment_world_percent",
-        "title": "Desemprego mundial (% da força de trabalho)",
-        "category": "Economia",
-        "unit": "%",
-        "source": "World Bank",
-        "type": "worldbank_latest",
-        "country_code": "WLD",
-        "indicator_code": "SL.UEM.TOTL.ZS",
-    },
 
-    # ----------------
-    # BRASIL (World Bank - anual)
-    # ----------------
+    # =========================================
+    # 🇧🇷 PIB BRASIL (World Bank)
+    # =========================================
     {
         "id": "gdp_brazil_current_usd",
-        "title": "PIB do Brasil (US$ corrente)",
-        "category": "Brasil",
-        "unit": "US$",
-        "source": "World Bank",
+        "title": "PIB Brasil (US$ corrente)",
+        "kind": "indicator",
         "type": "worldbank_latest",
+        "category": "Economia Brasil",
+        "unit": "US$",
+        "source": "internal",
+        "description": "Último valor anual disponível do PIB do Brasil em US$ corrente.",
+        "history_enabled": True,
+        "ranking_enabled": False,
+        "default_focus": "overview",
+        "home_priority": 0,
+        "world_priority": 0,
         "country_code": "BR",
         "indicator_code": "NY.GDP.MKTP.CD",
     },
+
     {
         "id": "population_brazil_worldbank",
         "title": "População do Brasil (World Bank)",
-        "category": "Brasil",
+        "kind": "indicator",
+        "type": "worldbank_latest",
+        "category": "Demografia",
         "unit": "pessoas",
         "source": "World Bank",
-        "type": "worldbank_latest",
+        "description": "Último valor anual disponível da população do Brasil.",
+        "history_enabled": True,
+        "ranking_enabled": False,
+        "default_focus": "overview",
+        "home_priority": 0,
+        "world_priority": 0,
         "country_code": "BR",
         "indicator_code": "SP.POP.TOTL",
     },
 
-    # ----------------
-    # BRASIL (BCB SGS - mais frequente)
-    # ----------------
     {
-        "id": "selic_bcb_daily",
-        "title": "Taxa Selic (ao dia, % a.a.)",
-        "category": "Brasil",
-        "unit": "% a.a.",
-        "source": "Banco Central (SGS)",
-        "type": "bcb_sgs_latest",
-        "series_id": 11,  # SELIC
-    },
-    {
-        "id": "ipca_bcb_monthly",
-        "title": "IPCA (variação mensal, %)",
-        "category": "Brasil",
-        "unit": "% no mês",
-        "source": "Banco Central (SGS)",
-        "type": "bcb_sgs_latest",
-        "series_id": 433,  # IPCA
-    },
-    {
-        "id": "usd_brl_bcb",
-        "title": "Dólar comercial (venda) R$/US$",
-        "category": "Brasil",
-        "unit": "R$/US$",
-        "source": "Banco Central (SGS)",
-        "type": "bcb_sgs_latest",
-        "series_id": 1,  # Câmbio USD venda (SGS clássico)
-    },
-
-    # ----------------
-    # ENERGIA (World Bank)
-    # ----------------
-    {
-        "id": "electricity_use_kwh_per_capita_world",
-        "title": "Uso de eletricidade per capita (kWh/ano)",
-        "category": "Energia",
-        "unit": "kWh per capita/ano",
-        "source": "World Bank",
-        "type": "worldbank_latest",
-        "country_code": "WLD",
-        "indicator_code": "EG.USE.ELEC.KH.PC",
-    },
-    {
-        "id": "electricity_access_world_percent",
-        "title": "Acesso à eletricidade (% da população)",
-        "category": "Energia",
-        "unit": "%",
-        "source": "World Bank",
-        "type": "worldbank_latest",
-        "country_code": "WLD",
-        "indicator_code": "EG.ELC.ACCS.ZS",
-    },
-    {
-        "id": "renewable_energy_consumption_world_percent",
-        "title": "Energia renovável no consumo final (%)",
-        "category": "Energia",
-        "unit": "%",
-        "source": "World Bank",
-        "type": "worldbank_latest",
-        "country_code": "WLD",
-        "indicator_code": "EG.FEC.RNEW.ZS",
+        "id": "co2_world_live",
+        "title": "Emissão de CO₂ (mundo, ao vivo)",
+        "kind": "indicator",
+        "type": "co2_model",
+        "category": "Clima",
+        "unit": "toneladas",
+        "source": "Modelo (estimativa)",
+        "description": "Estimativa em tempo real da emissão global de CO₂.",
+        "history_enabled": False,
+        "ranking_enabled": False,
+        "default_focus": "overview",
+        "home_priority": 0,
+        "world_priority": 0,
+        "base_value": 0,
+        "growth_per_second": 1173.0,
     },
 ]

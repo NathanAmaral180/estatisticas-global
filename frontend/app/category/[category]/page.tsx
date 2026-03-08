@@ -113,7 +113,7 @@ export default function CategoryPage({ params }: { params: { category: string } 
           {filtered.map((it) => (
             <a
               key={it.id}
-              href={`/indicator/${it.id}`}
+              href={`/i/${it.id}`}
               className="grid grid-cols-12 px-4 py-3 border-t border-white/10 hover:bg-white/5 transition"
             >
               <div className="col-span-7">
